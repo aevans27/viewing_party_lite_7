@@ -12,7 +12,9 @@
 
   <body>
     <%= link_to 'Go back to Landing Page', root_path %>
-
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, msg, class: name %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

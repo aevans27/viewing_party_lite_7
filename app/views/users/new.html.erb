@@ -1,17 +1,13 @@
 <h1>Register</h1>
 
-<%= form_for @user do |f| %>
-  <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= f.label :email %>
-    <%= f.email_field :email, class: 'form-control' %>
-  </div>
-  <div class="form-group">
-    <%= f.label :password %>
-    <%= f.password_field :password, class: 'form-control' %>
-  </div>
-  <%= f.submit 'Register', class: 'btn btn-primary' %>
+<%= form_with model: @user do |form| %>
+  <%= form.label :name, 'Name:' %>
+  <%= form.text_field :name %>
+  <%= form.label :email, 'Email' %>
+  <%= form.text_field :email %>
+  <%= form.label :password, 'Password:' %>
+  <%= form.password_field :password %>
+  <%= form.label :check, 'Check:' %>
+  <%= form.password_field :check %>
+  <%= form.submit 'Register', class: 'btn btn-primary' %>
   <%end%>

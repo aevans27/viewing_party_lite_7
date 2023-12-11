@@ -12,6 +12,9 @@ Rails.application.routes.draw do
     resources :viewing_parties, only: [:index]
   end
 
+  get "/login", to: "users#login_form"
+  post "/login", to: "users#login"
+
   get "/users/:user_id/movies/:movid_id/viewing-party/new", to: "viewing_parties#new"
   post "/users/:user_id/movies/:movid_id/viewing-party/create", to: "viewing_parties#create"
   patch "/users/:user_id/viewing-parties/:party_id/accept_invite", to: "viewing_parties#accept_invite"

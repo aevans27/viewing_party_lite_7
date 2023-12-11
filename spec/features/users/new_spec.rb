@@ -18,6 +18,7 @@ RSpec.describe 'User Registration', type: :feature do
     fill_in 'Name', with: 'John Doe'
     fill_in 'Email', with: 'john@example.com'
     fill_in 'Password', with: 'Sooners!2022'
+    fill_in 'Check', with: 'Sooners!2022'
     click_button 'Register'
     user = User.find_by(email: 'john@example.com')
     expect(current_path).to eq("/users/#{user.id}")
@@ -27,6 +28,17 @@ RSpec.describe 'User Registration', type: :feature do
     visit '/register'
     fill_in 'Email', with: 'john@example.com'
     fill_in 'Password', with: 'Sooners!2022'
+    fill_in 'Check', with: 'Sooners'
+    click_button 'Register'
+    expect(current_path).to eq("/users")
+  end
+
+  it 'redirects user to create user page if non matching password is entered' do
+    visit '/register'
+    fill_in 'Name', with: 'John Doe'
+    fill_in 'Email', with: 'john@example.com'
+    fill_in 'Password', with: 'Sooners!2022'
+    fill_in 'Check', with: 'Sooners'
     click_button 'Register'
     expect(current_path).to eq("/users")
   end

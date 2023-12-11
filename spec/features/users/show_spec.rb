@@ -66,4 +66,34 @@ RSpec.describe 'User show page', type: :feature do
       expect(page).to have_content("Other users attending: Jerry Bob")
     end
   end
+
+  it "can log in with valid credentials" do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+
+    expect(current_path).to eq(root_path)
+
+    expect(page).to have_content("Welcome, #{@user1.name}")
+    expect(page).to_not have_content("Sign Up to Be a User")
+  end
+
+  it "cannot log in with bad credentials" do
+    visit login_path
+    
+    fill_in :name, with: "Jojojojo"
+    fill_in :password, with: "incorrect password"
+  
+    click_on "Log In"
+  
+    expect(current_path).to eq(login_path)
+  
+    expect(page).to have_content("Sorry, your credentials are bad.")
+  end
 end
