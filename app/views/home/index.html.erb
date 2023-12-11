@@ -1,12 +1,15 @@
 <h1>Viewing Party Lite</h1>
-
-<%= form_with url: new_user_path, method: :get do %>
-  <%= submit_tag 'Create New User', class: 'btn btn-primary' %>
+<% if current_user %>
+  <%= link_to "Log Out" %>
+<% else %>
+  <%= form_with url: new_user_path, method: :get do %>
+    <%= submit_tag 'Create New User', class: 'btn btn-primary' %>
+  <% end %>
+  <%= form_with url: login_path, method: :get do %>
+    <%= submit_tag 'User Sign In', class: 'btn btn-primary' %>
+  <% end %>
 <% end %>
 
-<%= form_with url: login_path, method: :get do %>
-  <%= submit_tag 'User Sign In', class: 'btn btn-primary' %>
-<% end %>
 
 <h2>List of Existing Users</h2>
 <ul>
