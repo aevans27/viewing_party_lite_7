@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get "/login", to: "users#login_form"
   post "/login", to: "users#login"
+  post "/logout", to: "users#logout"
 
   get "/users/:user_id/movies/:movid_id/viewing-party/new", to: "viewing_parties#new"
   post "/users/:user_id/movies/:movid_id/viewing-party/create", to: "viewing_parties#create"

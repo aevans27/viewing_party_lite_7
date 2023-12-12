@@ -24,7 +24,14 @@ RSpec.describe 'Discover Movies Show Page' do
           'User-Agent'=>'Faraday v2.7.12'
            }).
          to_return(status: 200, body: lotr_response, headers: {})
+         visit '/'
          
+         click_on "User Sign In"
+         expect(current_path).to eq(login_path)
+         fill_in :name, with: @user1.name
+         fill_in :password, with: @user1.password
+         click_on "Log In"  
+            
     visit user_path(@user1)
     click_button 'Discover Movies'
 

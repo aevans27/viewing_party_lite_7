@@ -7,6 +7,8 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if params[:user][:password] == params[:user][:check]
       if @user.save
+        session[:user_id] = @user.id
+        flash[:success] = "Welcome, #{@user.name}!"
         redirect_to user_path(@user)
       else
         flash[:alert] = "Error: something is wrong with credentials"
@@ -19,12 +21,17 @@ class UsersController < ApplicationController
   end
 
   def show 
+    if current_user
     facade = MovieFacade.new
     @user = User.find(params[:id])
     @movies = []
-    @user.parties.uniq.each do |party|
-      @movies << facade.movie_details(party.movie_id)
-      @movies
+      @user.parties.uniq.each do |party|
+        @movies << facade.movie_details(party.movie_id)
+        @movies
+      end
+    else
+      flash[:error] = "Sorry, you must be signed in to view dashboard."
+      redirect_to root_path
     end
   end
 
@@ -42,6 +49,12 @@ class UsersController < ApplicationController
       flash[:error] = "Sorry, your credentials are bad."
       render :login_form
     end
+  end
+
+  def logout
+    session[:user_id] = nil
+    flash[:success] = "Logged out!"
+    redirect_to root_path
   end
 
   private

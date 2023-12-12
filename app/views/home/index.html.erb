@@ -1,6 +1,8 @@
 <h1>Viewing Party Lite</h1>
 <% if current_user %>
-  <%= link_to "Log Out" %>
+  <%= form_with url: logout_path, method: :post do %>
+    <%= submit_tag 'Log Out', class: 'btn btn-primary' %>
+  <% end %>
 <% else %>
   <%= form_with url: new_user_path, method: :get do %>
     <%= submit_tag 'Create New User', class: 'btn btn-primary' %>
@@ -10,11 +12,14 @@
   <% end %>
 <% end %>
 
+<% if current_user %>
+  <h2>List of Existing Users</h2>
+  <ul>
+    <% @users.each do |user| %>
+      <li><%= user.email %> </li>
+    <% end %>
+  </ul>
+<% else %>
 
-<h2>List of Existing Users</h2>
-<ul>
-  <% @users.each do |user| %>
-    <li><%= link_to user.name, user_path(user) %></li>
-  <% end %>
-</ul>
+<% end %>
 

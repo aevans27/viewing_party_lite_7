@@ -36,6 +36,15 @@ RSpec.describe 'New Viewing Party Page' do
   end
 
   it 'When I visit the new viewing party page it contains movie title, duration of party, when date, start time, checkboxes next to each user' do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
     visit "/users/#{@user1.id}/movies/268/viewing-party/new"
     expect(page).to have_field(:duration, with:126)
     expect(page).to have_field(:date)
@@ -57,6 +66,14 @@ RSpec.describe 'New Viewing Party Page' do
   end
 
   it 'sad path for creating a party: Bad data' do
+    visit '/'
+         
+    click_on "User Sign In"
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+    click_on "Log In"  
+
     visit "/users/#{@user1.id}/movies/268/viewing-party/new"
     expect(page).to have_field(:duration, with:126)
     expect(page).to have_field(:date)
@@ -75,6 +92,14 @@ RSpec.describe 'New Viewing Party Page' do
   end
 
   it 'sad path for creating a party: Bad duration' do
+    visit '/'
+         
+         click_on "User Sign In"
+         expect(current_path).to eq(login_path)
+         fill_in :name, with: @user1.name
+         fill_in :password, with: @user1.password
+         click_on "Log In"  
+
     visit "/users/#{@user1.id}/movies/268/viewing-party/new"
     expect(page).to have_field(:duration, with:126)
     expect(page).to have_field(:date)
@@ -93,6 +118,28 @@ RSpec.describe 'New Viewing Party Page' do
     click_button 'Create Party'
 
     expect(current_path).to eq("/users/#{@user1.id}/movies/268/viewing-party/new")
+  end
+
+  it 'sad path for creating a party: Not signed in' do     
+    visit "/users/#{@user1.id}/movies/268/viewing-party/new"
+    expect(page).to have_field(:duration, with:126)
+    expect(page).to have_field(:date)
+    expect(page).to have_field(:start_time)
+    expect(page).to have_button('Create Party')
+    expect(page).to have_content('Batman')
+
+    expect(@user2.user_parties.count).to eq(3)
+    expect(@user3.user_parties.count).to eq(2)
+
+    fill_in :duration, with: "2"
+    fill_in :start_time, with: '10:00'
+    fill_in :date, with: '2023/08/01'
+    check "#{@user2.name} (#{@user2.email})"
+    check "#{@user3.name} (#{@user3.email})"
+    click_button 'Create Party'
+
+    expect(current_path).to eq("/")
+    expect(page).to have_content("Sorry, you must be signed in to register event.")
   end
 
   it 'sets accepted to false for invited users when a party is created' do

@@ -38,19 +38,60 @@ RSpec.describe 'User show page', type: :feature do
   end
 
   it "displays the user's name and 'Dashboard' at the top of the page" do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+    visit "/users/#{@user1.id}"
     expect(page).to have_content("#{@user1.name}'s Dashboard")
   end
 
   it "displays a 'Discover Movies' button" do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+    visit "/users/#{@user1.id}"
     expect(page).to have_button('Discover Movies')
   end
 
   it "displays a 'Discover Movies' movie links" do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+    visit "/users/#{@user1.id}"
     expect(page).to have_link('The Lord of the Rings: The Fellowship of the Ring')
     expect(page).to have_link('Star Wars')
   end
 
   it 'displays a section that lists viewing parties' do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+    visit "/users/#{@user1.id}"
+
     within('section.attending-parties') do
       expect(page).to have_css('h2', text: 'Attending Parties')
       expect(page).to have_content("Movie Title: The Lord of the Rings: The Fellowship of the Ring")
@@ -95,5 +136,34 @@ RSpec.describe 'User show page', type: :feature do
     expect(current_path).to eq(login_path)
   
     expect(page).to have_content("Sorry, your credentials are bad.")
+  end
+
+  it "can log out" do
+    visit root_path
+
+    click_on "User Sign In"
+
+    expect(current_path).to eq(login_path)
+    fill_in :name, with: @user1.name
+    fill_in :password, with: @user1.password
+
+    click_on "Log In"
+
+    expect(current_path).to eq(root_path)
+
+    expect(page).to have_content("Welcome, #{@user1.name}")
+    expect(page).to_not have_content("Sign Up to Be a User")
+
+    click_on "Log Out"
+    # save_and_open_page
+    expect(current_path).to eq(root_path)
+    expect(page).to_not have_content("Welcome, #{@user1.name}")
+    expect(page).to have_content("Logged out!")
+  end
+
+  it "can't visit user dashboard unless signed in" do
+    visit "/users/#{@user1.id}"
+    expect(current_path).to eq(root_path)
+    expect(page).to have_content("Sorry, you must be signed in to view dashboard.")
   end
 end

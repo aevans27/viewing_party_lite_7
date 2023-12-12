@@ -15,10 +15,19 @@ RSpec.describe 'Home', type: :feature do
       expect(page).to have_button('Create New User')
     end
 
-    it 'displays a list of existing users with links to their dashboards' do
+    it 'displays a list of existing users only if signed in' do
       visit '/'
-      expect(page).to have_link(@user1.name, href: user_path(@user1))
-      expect(page).to have_link(@user2.name, href: user_path(@user2))
+      expect(page).to_not have_link(@user1.name, href: user_path(@user1))
+      expect(page).to_not have_link(@user2.name, href: user_path(@user2))
+      
+      click_on "User Sign In"
+      expect(current_path).to eq(login_path)
+      fill_in :name, with: @user1.name
+      fill_in :password, with: @user1.password
+      click_on "Log In"
+      
+      expect(page).to have_content('Tom@a_website.com')
+      expect(page).to have_content('Jerry@a_website.com')
     end
 
     it 'displays a link to go back to the landing page' do
